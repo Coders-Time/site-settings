@@ -372,4 +372,12 @@ https://github.com/pure-css/pure/blob/master/LICENSE.md
   margin: 10px;
 }
 
-
+#site_logo{
+  width: 200px;
+    background: #007cba;
+    padding: 8px 0px;
+    color: #fff;
+    font-size: 18px;
+    border: none;
+    border-radius: 5px;
+}

@@ -7,47 +7,54 @@
             <form action='<?php echo esc_url(admin_url('admin-post.php')); ?>' class='pure-form pure-form-aligned' method='POST'>
                 <fieldset>
                     <!-- <input type='hidden' name='customer_id' id='customer_id' value='0'> -->
-                    <div class='pure-control-group'>
-                        <?php $label = __('Change Footer logo', 'ctss'); ?>
-                        <label for='footer_logo'><?php echo $label; ?></label>
-                        <input type="file" class="custom-file-input" id="customFile" name="footer_logo">
-                        <label class="custom-file-label" for="customFile">Browse</label>
+                    <div class='pure-control-group logo_file'>
+                        <?php $label = __('Site logo', 'ctss'); ?>
+                        <label for='site_logo'><?php echo $label; ?></label>
+
+                        <?php if ( $img_id= get_option('site_logo')) {
+                            $image_url = wp_get_attachment_image_src( $img_id, 'thumbnail');
+                            printf('<img src=%s />',$image_url[0]);
+                        } ?>
+
+                        <button id="site_logo" type="button" class="btn btn-secondary btn-lg btn-block"> <?=get_option('site_logo') ? 'Change Image' : 'Select Image'; ?> </button>
+                        <input type="hidden" id="site_logo_val" name="site_logo">
+                        
                     </div>
 
                     <div class='pure-control-group'>
-                        <?php $label = __('Change Footer Title', 'ctss'); ?>
-                        <label for='footer_title'><?php echo $label; ?></label>
-                        <input class='ctss-control' required name='footer_title' id='footer_title' type='text' placeholder='<?php echo $label; ?>'>
+                        <?php $label = __('Site Title', 'ctss'); ?>
+                        <label for='site_title'><?php echo $label; ?></label>
+                        <input class='ctss-control' name='site_title' id='site_title' type='text' value='<?php echo get_option('blogname'); ?>'>
                     </div>
 
                     <div class='pure-control-group'>
-                        <?php $label = __('Change Footer Subtitle', 'ctss'); ?>
-                        <label for='footer_subtitle'><?php echo $label; ?></label>
-                        <input class='ctss-control' required name='footer_subtitle' id='footer_subtitle' type='text' placeholder='<?php echo $label; ?>'>
+                        <?php $label = __('Site Tagline', 'ctss'); ?>
+                        <label for='site_tagline'><?php echo $label; ?></label>
+                        <input class='ctss-control' name='blogdescription' id='site_tagline' type='text' value='<?php echo get_option('blogdescription'); ?>'>
                     </div>
 
                     <div class='pure-control-group'>
-                        <?php $label = __('Change Footer Address', 'ctss'); ?>
-                        <label for='footer_address'><?php echo $label; ?></label>
-                        <input class='ctss-control' required name='footer_address' id='footer_address' type='text' placeholder='<?php echo $label; ?>'>
+                        <?php $label = __('Site Email', 'ctss'); ?>
+                        <label for='site_email'><?php echo $label; ?></label>
+                        <input class='ctss-control' name='site_email' id='site_email' type='text' value='<?php echo get_option('site_email'); ?>'>
                     </div>
 
                     <div class='pure-control-group'>
-                        <?php $label = __('Change Footer Address 2 (optional)', 'ctss'); ?>
-                        <label for='footer_address_2'><?php echo $label; ?></label>
-                        <input class='ctss-control' required name='footer_address_2' id='footer_address_2' type='text' placeholder='<?php echo $label; ?>'>
+                        <?php $label = __('Site Phone', 'ctss'); ?>
+                        <label for='site_phone'><?php echo $label; ?></label>
+                        <input class='ctss-control' name='site_phone' id='site_phone' type='text' value='<?php echo get_option('site_phone'); ?>'>
                     </div>
 
                     <div class='pure-control-group'>
-                        <?php $label = __('Phone Number', 'ctss'); ?>
-                        <label for='phone'><?php echo $label; ?></label>
-                        <input class='ctss-control' name='phone' id='phone' type='text' placeholder='<?php echo $label; ?>'>
+                        <?php $label = __('Site Address', 'ctss'); ?>
+                        <label for='site_address'><?php echo $label; ?></label>
+                        <input class='ctss-control' required name='site_address' id='site_address' type='text' value='<?php echo get_option('site_address'); ?>'>
                     </div>
 
                     <div class='pure-control-group'>
-                        <?php $label = __('Change copyright option', 'ctss'); ?>
-                        <label for='copyright_option'><?php echo $label; ?></label>
-                        <input class='ctss-control' name='copyright_option' id='copyright_option' type='text' placeholder='<?php echo $label; ?>'>
+                        <?php $label = __('Site copyright text', 'ctss'); ?>
+                        <label for='copyright_text'><?php echo $label; ?></label>
+                        <input class='ctss-control' name='copyright_text' id='copyright_text' type='text' value='<?php echo get_option('site_copyright'); ?>'>
                     </div>
 
                     <div class='pure-control-group'>
@@ -58,11 +65,12 @@
                         </select>
                     </div>
 
-                    <div class='pure-control-group' style='margin-top:20px;'>
+                    <div class='pure-control-group' style='margin:20px auto;width: fit-content;'>
                         <button type='submit' name='submit' class='button button-primary button-hero' value="submit">
                             <?php _e('Submit Settings', 'ctss'); ?>
                         </button>
                     </div>
+
                 </fieldset>
                 <input type="hidden" name="action" value="ctss_form">
                 <input type="hidden" name="ctss_identifier" value="<?php echo md5(time()); ?>">
