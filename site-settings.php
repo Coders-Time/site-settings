@@ -23,7 +23,7 @@ class CTSiteSettings {
 		add_action( "admin_menu", [ $this, "ctss_admin_page" ] );	
 		add_action('admin_enqueue_scripts', [$this,'ctss_scripts'] );
 		add_action('admin_post_ctss_form', [$this,'ctss_form_submit'] );
-		add_action('ss_site_name', [$this,'ss_site_name'] );
+		add_action('ss_show', [$this,'ss_site_settings_info_show'] );
 		add_action('ss_site_copyright', [$this,'ss_site_copyright'] );
 		add_action('ctss_processing_complete', [$this,'ctss_processing_complete'] );
 	}
@@ -40,12 +40,8 @@ class CTSiteSettings {
         
 	}
 
-	public function ss_site_name ( ) {
-		echo get_option('blogname');
-	}
-
-	public function ss_site_copyright ( ) {
-		echo get_option('site_copyright');
+	public function ss_site_settings_info_show ( $key ) {
+		echo get_option( $key );
 	}
 
 	public function ctss_form_submit ( ) {
@@ -68,6 +64,11 @@ class CTSiteSettings {
 				$site_copyright = trim(sanitize_text_field($_POST['site_copyright']));
 				$tags = maybe_serialize($_POST['tags']);
 
+				$site_facebook = esc_url($_POST['site_facebook']);
+				$site_twitter = esc_url($_POST['site_twitter']);
+				$site_instagram = esc_url($_POST['site_instagram']);
+				$site_youtube = esc_url($_POST['site_youtube']);
+
 				if ( get_option('product_tags') != $tags ) {
 					update_option( 'product_tags', $tags );
 					set_transient("ss_tag", 'Site tags updated', 500);
@@ -86,35 +87,15 @@ class CTSiteSettings {
 					set_transient("ss_title", 'Site title updated', 500);
 				}
 				
-				if ( strlen($blogdescription) > 2 && get_option('blogdescription') != $blogdescription ) {
-					update_option( 'blogdescription', $blogdescription );
-					$this->response[] = 'tagline';
-					set_transient("ss_tagline", 'Site tagline updated', 500);
-				}
-				
-				if ( strlen( $site_email) > 3 && get_option('site_email') != $site_email ) {
-					update_option( 'site_email', $site_email );
-					$this->response[] = 'email';
-					set_transient("ss_email", 'Site email updated', 500);
-				}
-				
-				if ( strlen($site_phone) > 2 && get_option('site_phone') != $site_phone ) {
-					update_option( 'site_phone', $site_phone );
-					$this->response[] = 'phone';
-					set_transient("ss_phone", 'Site phone updated', 500);
-				}
-				
-				if ( strlen($site_address) > 2 && get_option('site_address') != $site_address ) {
-					update_option( 'site_address', $site_address );
-					$this->response[] = 'address';
-					set_transient("ss_address", 'Site Address updated', 500);
-				}
-				
-				if ( strlen($site_copyright) > 2 && get_option('site_copyright') != $site_copyright ) {
-					update_option( 'site_copyright', $site_copyright );
-					$this->response[] = 'copyright';
-					set_transient("ss_copyright", 'Site copyright updated', 500);
-				}
+				$this->save_option_table('blogdescription',$blogdescription);
+				$this->save_option_table('site_email',$site_email);
+				$this->save_option_table('site_phone',$site_phone);
+				$this->save_option_table('site_address',$site_address);
+				$this->save_option_table('site_copyright',$site_copyright);
+				$this->save_option_table('site_facebook',$site_facebook);
+				$this->save_option_table('site_twitter',$site_twitter);
+				$this->save_option_table('site_instagram',$site_instagram);
+				$this->save_option_table('site_youtube',$site_youtube);
 
 			}
             
@@ -124,6 +105,14 @@ class CTSiteSettings {
                 )
             );
         }
+	}
+
+	public function save_option_table ( $field,$value ){
+		if ( strlen($value) > 2 && get_option($field) != $value ) {
+			update_option( $field, $value );
+			$this->response[] = $field;
+			set_transient("ss_" . $field, 'Site '.ucfirst($field).' updated', 200);
+		}
 	}
 
 	public function ctss_admin_page ( ) {

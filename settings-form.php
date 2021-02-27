@@ -26,7 +26,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                             <button id="site_logo" type="button" class="btn btn-secondary btn-lg btn-block"> <?=get_option('site_logo') ? 'Change Image' : 'Select Image'; ?> </button>
                             <input type="hidden" id="site_logo_val" name="site_logo">
                         </div>
-                        
+
                         <div style="clear:both"></div>
                     </div>
 
@@ -87,6 +87,30 @@ if ( ! defined( 'ABSPATH' ) ) {
 
                             
                         </select>
+                    </div>
+
+                    <div class='pure-control-group'>
+                        <?php $label = __('Site Facebook link', 'ctss'); ?>
+                        <label for='site_copyright'><?php echo $label; ?></label>
+                        <input class='ctss-control' name='site_facebook' id='site_facebook' type='url' value='<?php echo get_option('site_facebook'); ?>'>
+                    </div>
+
+                    <div class='pure-control-group'>
+                        <?php $label = __('Site Twitter link', 'ctss'); ?>
+                        <label for='site_copyright'><?php echo $label; ?></label>
+                        <input class='ctss-control' name='site_twitter' id='site_twitter' type='url' value='<?php echo get_option('site_twitter'); ?>'>
+                    </div>
+
+                    <div class='pure-control-group'>
+                        <?php $label = __('Site Instagram link', 'ctss'); ?>
+                        <label for='site_copyright'><?php echo $label; ?></label>
+                        <input class='ctss-control' name='site_instagram' id='site_instagram' type='url' value='<?php echo get_option('site_instagram'); ?>'>
+                    </div>
+
+                    <div class='pure-control-group'>
+                        <?php $label = __('Site Youtube link', 'ctss'); ?>
+                        <label for='site_copyright'><?php echo $label; ?></label>
+                        <input class='ctss-control' name='site_youtube' id='site_youtube' type='url' value='<?php echo get_option('site_youtube'); ?>'>
                     </div>
 
                     <div class='pure-control-group' style='margin:20px auto;width: fit-content;'>
