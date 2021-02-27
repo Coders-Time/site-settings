@@ -32,41 +32,48 @@ class CTSiteSettings {
 				$response = [];
 
 				$site_logo = trim(sanitize_text_field($_POST['site_logo']));
-				$site_title = trim(sanitize_text_field($_POST['site_title']));
+				$blogname = trim(sanitize_text_field($_POST['blogname']));
 				$blogdescription = trim(sanitize_text_field($_POST['blogdescription']));
 				$site_email = trim(sanitize_text_field($_POST['site_email']));
 				$site_phone = trim(sanitize_text_field($_POST['site_phone']));
 				$site_address = trim(sanitize_text_field($_POST['site_address']));
+				$site_copyright = trim(sanitize_text_field($_POST['site_copyright']));
 
-				if ( strlen($site_logo)>5 && get_option('site_logo') != $site_logo ) {
+				if ( strlen($site_logo) > 0 && get_option('site_logo') != $site_logo ) {
 					update_option( 'site_logo', $site_logo );
 					$response['msg'] = 'Site logo updated';
 				}
 
-				if ( get_option('site_title') != $site_title ) {
-					update_option( 'site_title', $site_title );
+				if ( strlen($blogname) > 1 && get_option('blogname') != $blogname ) {
+					update_option( 'blogname', $blogname );
 					$response['msg'] = 'Site title updated';
 				}
 				
-				if ( get_option('blogdescription') != $blogdescription ) {
+				if ( strlen($blogdescription) > 2 && get_option('blogdescription') != $blogdescription ) {
 					update_option( 'blogdescription', $blogdescription );
 					$response['msg'] = 'Site tagline updated';
 				}
 				
-				if ( get_option('site_email') != $site_email ) {
+				if ( strlen( $site_email) > 3 && get_option('site_email') != $site_email ) {
 					update_option( 'site_email', $site_email );
 					$response['msg'] = 'Site Email updated';
 				}
 				
-				if ( get_option('site_phone') != $site_phone ) {
+				if ( strlen($site_phone) > 2 && get_option('site_phone') != $site_phone ) {
 					update_option( 'site_phone', $site_phone );
 					$response['msg'] = 'Site Phone updated';
 				}
 				
-				if ( get_option('site_address') != $site_address ) {
+				if ( strlen($site_address) > 2 && get_option('site_address') != $site_address ) {
 					update_option( 'site_address', $site_address );
-					$response['msg'] = 'Site Phone updated';
+					$response['msg'] = 'Site Address updated';
 				}
+				
+				if ( strlen($site_copyright) > 2 && get_option('site_copyright') != $site_copyright ) {
+					update_option( 'site_copyright', $site_copyright );
+					$response['msg'] = 'Site Copyright info updated';
+				}
+
 			}
             
             wp_safe_redirect(
@@ -97,6 +104,7 @@ class CTSiteSettings {
             $asset_file_link = plugins_url( '', __FILE__ );
             $folder_path= __DIR__ ;
 
+            wp_enqueue_style('bootstrap-min-css-style', $asset_file_link .'/../woocommerce/assets/css/bootstrap.min.css', [], '4.5.3');
             wp_enqueue_style('select2', $asset_file_link . '/../woocommerce/assets/css/select2.css',[]);
             wp_enqueue_style('ctss', $asset_file_link . '/assets/css/style.css', array(), filemtime($folder_path.'/assets/css/style.css'));            
             wp_enqueue_script('select2', $asset_file_link . '/../woocommerce/assets/js/select2/select2.js', array('jquery'));

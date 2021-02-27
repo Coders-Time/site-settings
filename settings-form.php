@@ -7,24 +7,27 @@
             <form action='<?php echo esc_url(admin_url('admin-post.php')); ?>' class='pure-form pure-form-aligned' method='POST'>
                 <fieldset>
                     <!-- <input type='hidden' name='customer_id' id='customer_id' value='0'> -->
-                    <div class='pure-control-group logo_file'>
-                        <?php $label = __('Site logo', 'ctss'); ?>
-                        <label for='site_logo'><?php echo $label; ?></label>
-
-                        <?php if ( $img_id= get_option('site_logo')) {
-                            $image_url = wp_get_attachment_image_src( $img_id, 'thumbnail');
-                            printf('<img src=%s />',$image_url[0]);
-                        } ?>
-
-                        <button id="site_logo" type="button" class="btn btn-secondary btn-lg btn-block"> <?=get_option('site_logo') ? 'Change Image' : 'Select Image'; ?> </button>
-                        <input type="hidden" id="site_logo_val" name="site_logo">
+                    <div class="row pure-control-group">
+                            <?php $label = __('Site logo', 'ctss'); ?>
+                            <label for='site_logo'><?php echo $label; ?></label>
+                        <div class='pure-control-group logo_file col-lg-4'>
+                            <?php if ( $img_id= get_option('site_logo')) {
+                                $image_url = wp_get_attachment_image_src( $img_id, 'thumbnail');
+                                printf('<img class="preview" src=%s />',$image_url[0]);
+                            }?>                            
+                        </div>
+                        <div class="col-lg-4 mt-4">
+                            <button id="site_logo" type="button" class="btn btn-secondary btn-lg btn-block"> <?=get_option('site_logo') ? 'Change Image' : 'Select Image'; ?> </button>
+                            <input type="hidden" id="site_logo_val" name="site_logo">
+                        </div>
                         
+                        <div style="clear:both"></div>
                     </div>
 
                     <div class='pure-control-group'>
                         <?php $label = __('Site Title', 'ctss'); ?>
                         <label for='site_title'><?php echo $label; ?></label>
-                        <input class='ctss-control' name='site_title' id='site_title' type='text' value='<?php echo get_option('blogname'); ?>'>
+                        <input class='ctss-control' name='blogname' id='site_title' type='text' value='<?php echo get_option('blogname'); ?>'>
                     </div>
 
                     <div class='pure-control-group'>
@@ -53,8 +56,8 @@
 
                     <div class='pure-control-group'>
                         <?php $label = __('Site copyright text', 'ctss'); ?>
-                        <label for='copyright_text'><?php echo $label; ?></label>
-                        <input class='ctss-control' name='copyright_text' id='copyright_text' type='text' value='<?php echo get_option('site_copyright'); ?>'>
+                        <label for='site_copyright'><?php echo $label; ?></label>
+                        <input class='ctss-control' name='site_copyright' id='site_copyright' type='text' value='<?php echo get_option('site_copyright'); ?>'>
                     </div>
 
                     <div class='pure-control-group'>
@@ -91,3 +94,17 @@
         ?>
     </div>
 </div>
+
+
+<?php 
+$args = array(
+    'number'     => $number,
+    'orderby'    => $orderby,
+    'order'      => $order,
+    'hide_empty' => $hide_empty,
+    'include'    => $ids
+);
+
+$product_tags = get_terms( 'product_tag', $args );
+var_dump($product_tags);
+?>
