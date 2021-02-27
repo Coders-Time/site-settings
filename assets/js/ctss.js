@@ -33,5 +33,9 @@
         });
         /*Media upload */
 
+        if ($('.ctss-modal-content .success_msg').length > 0) {
+            tb_show($(".site_title").text(), "#TB_inline?inlineId=ctss-modal&width=700");
+        }
+
     });
 })(jQuery);

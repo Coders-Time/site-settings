@@ -1,14 +1,12 @@
 <?php
-
-
-
-
-
+if ( ! defined( 'ABSPATH' ) ) {
+    exit; 
+}
 ?>
 
 <div class="ctss-form-wrapper">
     <div class="ctss-form-title">
-        <h4><?php _e('Woocommerce Settings Form', 'ctss'); ?></h4>
+        <h4 class="site_title"><?php _e('Site Settings Panel', 'ctss'); ?></h4>
     </div>
     <div class='ctss-form-container'>
         <div class="ctss-form">
@@ -111,21 +109,9 @@
 <div id="ctss-modal">
     <div class="ctss-modal-content">
         <?php
-        if (isset($_GET['order_id'])) {
-            do_action('ctss_order_processing_complete', sanitize_text_field($_GET['order_id']));
+        if (isset($_GET['msg'])) {
+            do_action('ctss_processing_complete', sanitize_text_field($_GET['msg']));
         }
         ?>
     </div>
 </div>
-
-
-<?php 
-$args = array(
-    'number'     => $number,
-    'orderby'    => $orderby,
-    'order'      => $order,
-    'hide_empty' => $hide_empty,
-    'include'    => $ids
-);
-
-?>

@@ -1,9 +1,4 @@
-/*!
-Pure v1.0.1
-Copyright 2013 Yahoo!
-Licensed under the BSD License.
-https://github.com/pure-css/pure/blob/master/LICENSE.md
-*/
+
 .pure-form input[type="color"],
 .pure-form input[type="date"],
 .pure-form input[type="datetime-local"],
@@ -342,19 +337,16 @@ https://github.com/pure-css/pure/blob/master/LICENSE.md
   display: none;
 }
 
-.ctss-modal-content {
-  padding: 10px;
+#TB_ajaxContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .ctss-modal-content p {
   font-size: 20px;
 }
 
-#TB_window {
-  margin-top: 50px !important;
-  width: 750px !important;
-  height: 240px !important;
-}
 .note_area{margin-top: 20px;}
 
 .select2-selection {

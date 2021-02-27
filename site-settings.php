@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Sites Settings
-Plugin URI: 
+Plugin URI: https://github.com/Coders-Time/site-settings
 Description: Sites Info Settings
 Version: 1.0.0
 Author: Coderstime
@@ -10,7 +10,6 @@ Text Domain: sitesettings
 
  */
 
-// oge_manage
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; 
 }
@@ -18,12 +17,27 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class CTSiteSettings {
 
+	public array $response = [];
+
 	public function __construct ( ) {
 		add_action( "admin_menu", [ $this, "ctss_admin_page" ] );	
 		add_action('admin_enqueue_scripts', [$this,'ctss_scripts'] );
 		add_action('admin_post_ctss_form', [$this,'ctss_form_submit'] );
 		add_action('ss_site_name', [$this,'ss_site_name'] );
 		add_action('ss_site_copyright', [$this,'ss_site_copyright'] );
+		add_action('ctss_processing_complete', [$this,'ctss_processing_complete'] );
+	}
+
+	public function ctss_processing_complete ( $response ) {
+		$msgs = explode('-',$response);
+		if (count($msgs)>0) {
+			foreach ($msgs as $msg) {
+				$res_msg = get_transient("ss_" . $msg);
+				$message =  __("<p class='success_msg text-success text-center'> %s </p>", 'sitesettings');
+        		printf($message, $res_msg );
+			}
+		}
+        
 	}
 
 	public function ss_site_name ( ) {
@@ -39,64 +53,74 @@ class CTSiteSettings {
 		if (isset($_POST['submit']) ) {
 
 			if ( wp_verify_nonce(sanitize_text_field($_POST['ctss_form_nonce']), 'ctss_form'  ) ) {
-				$response = [];
-
 				$site_logo = trim(sanitize_text_field($_POST['site_logo']));
 				$blogname = trim(sanitize_text_field($_POST['blogname']));
 				$blogdescription = trim(sanitize_text_field($_POST['blogdescription']));
-				$site_email = trim(sanitize_text_field($_POST['site_email']));
-				$site_phone = trim(sanitize_text_field($_POST['site_phone']));
+				$site_email = trim(sanitize_email($_POST['site_email']));
+
+				if ( class_exists( 'WooCommerce' ) ) {
+				  $site_phone = trim(wc_sanitize_phone_number($_POST['site_phone']));
+				} else {
+				  $site_phone = trim(sanitize_text_field($_POST['site_phone']));
+				}
+				
 				$site_address = trim(sanitize_text_field($_POST['site_address']));
 				$site_copyright = trim(sanitize_text_field($_POST['site_copyright']));
 				$tags = maybe_serialize($_POST['tags']);
 
 				if ( get_option('product_tags') != $tags ) {
 					update_option( 'product_tags', $tags );
-					$response['msg'] = 'Site tags updated';
+					set_transient("ss_tag", 'Site tags updated', 500);
+					$this->response[] = 'tag';
 				}
 
 				if ( strlen($site_logo) > 0 && get_option('site_logo') != $site_logo ) {
 					update_option( 'site_logo', $site_logo );
-					$response['msg'] = 'Site logo updated';
+					$this->response[] = 'logo';
+					set_transient("ss_logo", 'Site logo updated', 500);
 				}
 
 				if ( strlen($blogname) > 1 && get_option('blogname') != $blogname ) {
 					update_option( 'blogname', $blogname );
-					$response['msg'] = 'Site title updated';
+					$this->response[] = 'title';
+					set_transient("ss_title", 'Site title updated', 500);
 				}
 				
 				if ( strlen($blogdescription) > 2 && get_option('blogdescription') != $blogdescription ) {
 					update_option( 'blogdescription', $blogdescription );
-					$response['msg'] = 'Site tagline updated';
+					$this->response[] = 'tagline';
+					set_transient("ss_tagline", 'Site tagline updated', 500);
 				}
 				
 				if ( strlen( $site_email) > 3 && get_option('site_email') != $site_email ) {
 					update_option( 'site_email', $site_email );
-					$response['msg'] = 'Site Email updated';
+					$this->response[] = 'email';
+					set_transient("ss_email", 'Site email updated', 500);
 				}
 				
 				if ( strlen($site_phone) > 2 && get_option('site_phone') != $site_phone ) {
 					update_option( 'site_phone', $site_phone );
-					$response['msg'] = 'Site Phone updated';
+					$this->response[] = 'phone';
+					set_transient("ss_phone", 'Site phone updated', 500);
 				}
 				
 				if ( strlen($site_address) > 2 && get_option('site_address') != $site_address ) {
 					update_option( 'site_address', $site_address );
-					$response['msg'] = 'Site Address updated';
+					$this->response[] = 'address';
+					set_transient("ss_address", 'Site Address updated', 500);
 				}
 				
 				if ( strlen($site_copyright) > 2 && get_option('site_copyright') != $site_copyright ) {
 					update_option( 'site_copyright', $site_copyright );
-					$response['msg'] = 'Site Copyright info updated';
+					$this->response[] = 'copyright';
+					set_transient("ss_copyright", 'Site copyright updated', 500);
 				}
-
-
 
 			}
             
             wp_safe_redirect(
                 esc_url_raw(
-                    add_query_arg('msg', $response['msg'], admin_url('admin.php?page=sites-info'))
+                    add_query_arg('msg', implode('-',$this->response), admin_url('admin.php?page=sites-info'))
                 )
             );
         }
@@ -122,7 +146,7 @@ class CTSiteSettings {
             $asset_file_link = plugins_url( '', __FILE__ );
             $folder_path= __DIR__ ;
 
-            wp_enqueue_style('bootstrap-min-css-style', $asset_file_link .'/../woocommerce/assets/css/bootstrap.min.css', [], '4.5.3');
+            wp_enqueue_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css', [], '4.5.3');
             wp_enqueue_style('select2', $asset_file_link . '/../woocommerce/assets/css/select2.css',[]);
             wp_enqueue_style('ctss', $asset_file_link . '/assets/css/style.css', array(), filemtime($folder_path.'/assets/css/style.css'));            
             wp_enqueue_script('select2', $asset_file_link . '/../woocommerce/assets/js/select2/select2.js', array('jquery'));
@@ -138,7 +162,10 @@ class CTSiteSettings {
 		$post_tags = get_tags(['hide_empty' => false]); 
 		$product_tags = get_terms( 'product_tag'); 
 		$tags= maybe_unserialize(get_option('product_tags'));
-		$tags_name = $this->tags_name_by_id($tags);
+		if ($tags) {
+			$tags_name = $this->tags_name_by_id($tags);
+		}
+		
 
 		include('settings-form.php');
 	}
