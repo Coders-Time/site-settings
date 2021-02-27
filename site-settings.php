@@ -22,6 +22,16 @@ class CTSiteSettings {
 		add_action( "admin_menu", [ $this, "ctss_admin_page" ] );	
 		add_action('admin_enqueue_scripts', [$this,'ctss_scripts'] );
 		add_action('admin_post_ctss_form', [$this,'ctss_form_submit'] );
+		add_action('ss_site_name', [$this,'ss_site_name'] );
+		add_action('ss_site_copyright', [$this,'ss_site_copyright'] );
+	}
+
+	public function ss_site_name ( ) {
+		echo get_option('blogname');
+	}
+
+	public function ss_site_copyright ( ) {
+		echo get_option('site_copyright');
 	}
 
 	public function ctss_form_submit ( ) {
@@ -38,6 +48,12 @@ class CTSiteSettings {
 				$site_phone = trim(sanitize_text_field($_POST['site_phone']));
 				$site_address = trim(sanitize_text_field($_POST['site_address']));
 				$site_copyright = trim(sanitize_text_field($_POST['site_copyright']));
+				$tags = maybe_serialize($_POST['tags']);
+
+				if ( get_option('product_tags') != $tags ) {
+					update_option( 'product_tags', $tags );
+					$response['msg'] = 'Site tags updated';
+				}
 
 				if ( strlen($site_logo) > 0 && get_option('site_logo') != $site_logo ) {
 					update_option( 'site_logo', $site_logo );
@@ -73,6 +89,8 @@ class CTSiteSettings {
 					update_option( 'site_copyright', $site_copyright );
 					$response['msg'] = 'Site Copyright info updated';
 				}
+
+
 
 			}
             
@@ -117,7 +135,16 @@ class CTSiteSettings {
 	
 
 	public function ctss_display_settings_info ( ) {
+		$post_tags = get_tags(['hide_empty' => false]); 
+		$product_tags = get_terms( 'product_tag'); 
+		$tags= maybe_unserialize(get_option('product_tags'));
+		$tags_name = $this->tags_name_by_id($tags);
+
 		include('settings-form.php');
+	}
+
+	public function tags_name_by_id ( $tags, $taxonomy='product_tag' ) {
+		return array_map(function($tag){global $taxonomy;return get_term( $tag, $taxonomy )->name;}, $tags);
 	}
 
 

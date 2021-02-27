@@ -1,3 +1,11 @@
+<?php
+
+
+
+
+
+?>
+
 <div class="ctss-form-wrapper">
     <div class="ctss-form-title">
         <h4><?php _e('Woocommerce Settings Form', 'ctss'); ?></h4>
@@ -63,8 +71,23 @@
                     <div class='pure-control-group'>
                         <?php $label = __('Tag Name', 'ctss'); ?>
                         <label for='tag_name'><?php echo $label; ?></label>
-                        <select class='ctss-control select_product' multiple name='tag_name' id='tag_name'>
-                            <option value="0"><?php _e('Select Tag', 'ctss'); ?></option>
+                        <select class='ctss-control select_product' multiple name='tags[]' id='tag_name'>
+                            <optgroup label="<?=get_post_type_object( 'product' )->labels->singular_name;?> tags">
+                                <?php 
+                                if (count($product_tags)>0) {
+                                    foreach ($product_tags as $key => $tag) {
+                                        if ( in_array($tag->term_id,$tags)) {
+                                            printf('<option value="%d" selected>%s</option>',$tag->term_id,$tag->name);
+                                        } else {
+                                            printf('<option value="%d">%s</option>',$tag->term_id,$tag->name);
+                                        }
+                                        
+                                    }
+                                }
+                                ?>
+                            </optgroup>
+
+                            
                         </select>
                     </div>
 
@@ -105,6 +128,4 @@ $args = array(
     'include'    => $ids
 );
 
-$product_tags = get_terms( 'product_tag', $args );
-var_dump($product_tags);
 ?>
