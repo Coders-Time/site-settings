@@ -140,6 +140,3 @@ if ( ! defined( 'ABSPATH' ) ) {
     </div>
 </div>
 
-
-
-<?php print_r($_SERVER); ?>
