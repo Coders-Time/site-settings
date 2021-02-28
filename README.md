@@ -11,13 +11,13 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
 Site-settings is the ultimate plugin for making all the necessary changes in the custom fields of a website. 
 
 == Description ==
-Site-settings is an official plugin maintained by the Coderstime team that adds an extra feature on the \"Settings\" option on the admin dashboard. It makes it possible to use plugins that extend that screen, add clean meta boxes.
+Site-settings is an official plugin maintained by the Coderstime team that adds an extra feature on the "Settings" option on the admin dashboard. It makes it possible to use plugins that extend that screen, add clean meta boxes.
 
 Site Settings is an official Coderstime plugin, and will be fully supported and maintained until at least 2022, or as long as is necessary.
 
 At a glance, this plugin adds the following:
 
-Administrators can make the default changes for all users. The form includes the change in the sites logo, title, tagline, email, phone, address, copyrighted text along with the change in the social media links that are to be posted in the website.
+Administrators can make the default changes for all users. The form includes the change in the site's logo, title, tagline, email, phone, address, copyrighted text along with the change in the social media links that are to be posted in the website.
 When allowed, the plugin will ask for information to change and once the changes are submitted, there will be a confirmation box to alert the admin. Only admin will have the privilege to make all the necessary changes.
 Each post opens in the last editor used regardless of who edited it last. This is important for maintaining a consistent experience when editing content.
 
