@@ -2,18 +2,16 @@
 /*
 Plugin Name: Sites Settings
 Plugin URI: https://github.com/Coders-Time/site-settings
-Description: Sites Info Settings
+Description: A simple and nice plugin to set and update your site basic settings by admin on dashboard settings menu
 Version: 1.0.0
 Author: Coderstime
+Author URI: https://profiles.wordpress.org/coderstime/
 License: GPLv2 or later
 Text Domain: sitesettings
 
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit; 
-}
-
+defined( 'ABSPATH' ) || exit;
 
 class CTSiteSettings {
 
@@ -34,12 +32,20 @@ class CTSiteSettings {
 				$message =  __("<p class='success_msg text-success text-center'> %s </p>", 'sitesettings');
         		printf($message, $res_msg );
 			}
-		}
-        
+		}        
 	}
 
 	public function ss_site_settings_info_show ( $key ) {
-		echo get_option( $key );
+		if ($key=='product_tags') {
+			$tags= maybe_unserialize(get_option($key));
+			if ($tags) {
+				$tag_names = $this->tags_name_by_id($tags);
+				echo implode(', ', $tag_names);
+			}
+		}else {
+			echo get_option( $key );
+		}
+		
 	}
 
 	public function ss_site_copyright ( $key ) {
@@ -98,12 +104,11 @@ class CTSiteSettings {
 				$this->save_option_table('site_twitter',$site_twitter);
 				$this->save_option_table('site_instagram',$site_instagram);
 				$this->save_option_table('site_youtube',$site_youtube);
-
 			}
             
             wp_safe_redirect(
                 esc_url_raw(
-                    add_query_arg('msg', implode('-',$this->response), admin_url('admin.php?page=sites-info'))
+                    add_query_arg('msg', implode('-',$this->response), admin_url('admin.php?page=site-settings'))
                 )
             );
         }
@@ -122,17 +127,17 @@ class CTSiteSettings {
 		/*create submenu under settings Menu*/
 		add_submenu_page(
 			'options-general.php', 
-			__( 'Sites Info', 'sesender' ),
-			__( 'Sites Info', 'sesender' ),
+			__( 'Site Settings', 'sesender' ),
+			__( 'Site Settings', 'sesender' ),
 			'administrator', 
-			'sites-info',
+			'site-settings',
 			[ $this, 'ctss_display_settings_info']
 		);
 	}
 
 	public function ctss_scripts( $hook ) {
 
-        if ('settings_page_sites-info' == $hook) {
+        if ('settings_page_site-settings' == $hook) {
 
             $asset_file_link = plugins_url( '', __FILE__ );
             $folder_path= __DIR__ ;
