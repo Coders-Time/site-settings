@@ -17,8 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class CTSiteSettings {
 
-	public array $response = [];
-
 	public function __construct ( ) {
 		add_action( "admin_menu", [ $this, "ctss_admin_page" ] );	
 		add_action('admin_enqueue_scripts', [$this,'ctss_scripts'] );
@@ -41,6 +39,10 @@ class CTSiteSettings {
 	}
 
 	public function ss_site_settings_info_show ( $key ) {
+		echo get_option( $key );
+	}
+
+	public function ss_site_copyright ( $key ) {
 		echo get_option( $key );
 	}
 
@@ -107,11 +109,11 @@ class CTSiteSettings {
         }
 	}
 
-	public function save_option_table ( $field,$value ){
+	public function save_option_table ( $field, $value ){
 		if ( strlen($value) > 2 && get_option($field) != $value ) {
 			update_option( $field, $value );
 			$this->response[] = $field;
-			set_transient("ss_" . $field, 'Site '.ucfirst($field).' updated', 200);
+			set_transient("ss_" . $field, 'Site '.ucfirst(str_replace('_', ' ', $field)).' updated', 200);
 		}
 	}
 
@@ -154,8 +156,6 @@ class CTSiteSettings {
 		if ($tags) {
 			$tags_name = $this->tags_name_by_id($tags);
 		}
-		
-
 		include('settings-form.php');
 	}
 
