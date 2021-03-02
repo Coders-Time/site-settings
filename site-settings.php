@@ -28,16 +28,14 @@ class CTSiteSettings {
 		$msgs = explode('-',$response);
 		if (count($msgs)>0) {
 			foreach ($msgs as $msg) {
-				$res_msg = get_transient("ss_" . $msg);
-				$message =  __("<p class='success_msg text-success text-center'> %s </p>", 'sitesettings');
-        		printf($message, $res_msg );
+        		printf('<p class="success_msg">Copy and paste this code in PHP block to show %1$s</p><pre><code>do_action("ss_show","%1$s");</code></pre>',$msg);
 			}
 		}        
 	}
 
 	public function ss_site_settings_info_show ( $key ) {
 		if ($key=='product_tags') {
-			$tags= maybe_unserialize(get_option($key));
+			$tags= get_option($key);
 			if ($tags) {
 				$tag_names = $this->tags_name_by_id($tags);
 				echo implode(', ', $tag_names);
@@ -70,7 +68,7 @@ class CTSiteSettings {
 				
 				$site_address = trim(sanitize_text_field($_POST['site_address']));
 				$site_copyright = trim(sanitize_text_field($_POST['site_copyright']));
-				$tags = maybe_serialize($_POST['tags']);
+				$tags = $_POST['tags'];
 
 				$site_facebook = esc_url($_POST['site_facebook']);
 				$site_twitter = esc_url($_POST['site_twitter']);
@@ -142,7 +140,7 @@ class CTSiteSettings {
             $asset_file_link = plugins_url( '', __FILE__ );
             $folder_path= __DIR__ ;
 
-            wp_enqueue_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css', [], '4.5.3');
+            wp_enqueue_style('bootstrap', $asset_file_link. '/assets/css/bootstrap.min.css', [], '4.5.3');
             wp_enqueue_style('select2', $asset_file_link . '/../woocommerce/assets/css/select2.css',[]);
             wp_enqueue_style('ctss', $asset_file_link . '/assets/css/style.css', array(), filemtime($folder_path.'/assets/css/style.css'));            
             wp_enqueue_script('select2', $asset_file_link . '/../woocommerce/assets/js/select2/select2.js', array('jquery'));
@@ -157,10 +155,8 @@ class CTSiteSettings {
 	public function ctss_display_settings_info ( ) {
 		$post_tags = get_tags(['hide_empty' => false]); 
 		$product_tags = get_terms( 'product_tag'); 
-		$tags= maybe_unserialize(get_option('product_tags'));
-		if ($tags) {
-			$tags_name = $this->tags_name_by_id($tags);
-		}
+		$tags= get_option('product_tags');
+		
 		include('settings-form.php');
 	}
 

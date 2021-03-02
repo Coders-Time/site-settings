@@ -2,6 +2,7 @@
 if ( ! defined( 'ABSPATH' ) ) {
     exit; 
 }
+
 ?>
 
 <div class="ctss-form-wrapper">
@@ -23,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                             }?>                            
                         </div>
                         <div class="col-lg-4 mt-4">
-                            <button id="site_logo" type="button" class="btn btn-secondary btn-lg btn-block"> <?=get_option('site_logo') ? 'Change Image' : 'Select Image'; ?> </button>
+                            <button id="site_logo" type="button" class="btn btn-secondary btn-lg btn-block"> <?php echo get_option('site_logo') ? 'Change Image' : 'Select Image'; ?> </button>
                             <input type="hidden" id="site_logo_val" name="site_logo">
                         </div>
 
@@ -70,7 +71,7 @@ if ( ! defined( 'ABSPATH' ) ) {
                         <?php $label = __('Tag Name', 'ctss'); ?>
                         <label for='tag_name'><?php echo $label; ?></label>
                         <select class='ctss-control select_product' multiple name='tags[]' id='tag_name'>
-                            <optgroup label="<?=get_post_type_object( 'product' )->labels->singular_name;?> tags">
+                            <optgroup label="<?php echo get_post_type_object( 'product' )->labels->singular_name;?> tags">
                                 <?php 
                                 if (count($product_tags)>0) {
                                     foreach ($product_tags as $key => $tag) {
