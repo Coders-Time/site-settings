@@ -26,22 +26,25 @@ class CTSiteSettings {
 
 	public function ctss_processing_complete ( $response ) {
 		$msgs = explode('-',$response);
-		if (count($msgs)>0) {
-			foreach ($msgs as $msg) {
+		if ( count( $msgs )>0 ) {
+			foreach ( $msgs as $msg ) {
         		printf('<p class="success_msg">Copy and paste this code in PHP block to show %1$s</p><pre><code>do_action("ss_show","%1$s");</code></pre>',$msg);
 			}
 		}        
 	}
 
 	public function ss_site_settings_info_show ( $key ) {
-		if ($key=='product_tags') {
-			$tags= get_option($key);
-			if ($tags) {
-				$tag_names = $this->tags_name_by_id($tags);
-				echo implode(', ', $tag_names);
-			}
-		}else {
-			echo get_option( $key );
+		switch ( $key ) {
+			case 'product_tags':
+				$tags= get_option($key);
+				if ($tags) {
+					$tag_names = $this->tags_name_by_id($tags);
+					echo implode(', ', $tag_names);
+				}
+				break;			
+			default:
+				echo get_option( $key );
+				break;
 		}
 		
 	}
@@ -55,8 +58,9 @@ class CTSiteSettings {
 		if (isset($_POST['submit']) ) {
 
 			if ( wp_verify_nonce(sanitize_text_field($_POST['ctss_form_nonce']), 'ctss_form'  ) ) {
-				$site_logo = trim(sanitize_text_field($_POST['site_logo']));
-				$blogname = trim(sanitize_text_field($_POST['blogname']));
+
+				$site_logo = sanitize_text_field($_POST['site_logo']);
+				$blogname = sanitize_text_field($_POST['blogname']);
 				$blogdescription = trim(sanitize_text_field($_POST['blogdescription']));
 				$site_email = trim(sanitize_email($_POST['site_email']));
 
@@ -68,28 +72,28 @@ class CTSiteSettings {
 				
 				$site_address = trim(sanitize_text_field($_POST['site_address']));
 				$site_copyright = trim(sanitize_text_field($_POST['site_copyright']));
-				$tags = $_POST['tags'];
-
 				$site_facebook = esc_url($_POST['site_facebook']);
 				$site_twitter = esc_url($_POST['site_twitter']);
 				$site_instagram = esc_url($_POST['site_instagram']);
 				$site_youtube = esc_url($_POST['site_youtube']);
 
-				if ( get_option('product_tags') != $tags ) {
+				$tags = array_map( 'esc_attr', isset( $_POST['tags'] ) ? (array) $_POST['tags'] : [] );
+
+				if ( array_diff($tags, get_option('product_tags')) ) {
 					update_option( 'product_tags', $tags );
 					set_transient("ss_tag", 'Site tags updated', 500);
-					$this->response[] = 'tag';
+					$this->response[] = 'product_tags';
 				}
 
 				if ( strlen($site_logo) > 0 && get_option('site_logo') != $site_logo ) {
 					update_option( 'site_logo', $site_logo );
-					$this->response[] = 'logo';
-					set_transient("ss_logo", 'Site logo updated', 500);
+					$this->response[] = 'site_logo';
+					set_transient("ss_logo", 'Site logo media id updated', 500);
 				}
 
 				if ( strlen($blogname) > 1 && get_option('blogname') != $blogname ) {
 					update_option( 'blogname', $blogname );
-					$this->response[] = 'title';
+					$this->response[] = 'blogname';
 					set_transient("ss_title", 'Site title updated', 500);
 				}
 				
@@ -140,7 +144,7 @@ class CTSiteSettings {
             $asset_file_link = plugins_url( '', __FILE__ );
             $folder_path= __DIR__ ;
 
-            wp_enqueue_style('bootstrap', $asset_file_link. '/assets/css/bootstrap.min.css', [], '4.5.3');
+            wp_enqueue_style('bootstrap', $asset_file_link. '/assets/css/bootstrap.min.css', [], '5.0.0');
             wp_enqueue_style('select2', $asset_file_link . '/../woocommerce/assets/css/select2.css',[]);
             wp_enqueue_style('ctss', $asset_file_link . '/assets/css/style.css', array(), filemtime($folder_path.'/assets/css/style.css'));            
             wp_enqueue_script('select2', $asset_file_link . '/../woocommerce/assets/js/select2/select2.js', array('jquery'));

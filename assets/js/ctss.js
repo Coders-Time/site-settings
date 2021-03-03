@@ -26,7 +26,7 @@
                 console.log(attachment);
                 $('#site_logo_val').val(attachment);
                 $("#site_logo").hide();
-                $('.logo_file').append(`<button style="margin:0;padding:0" class="notice notice-success is-dismissible ctss-control mt-3">
+                $('.logo_file').append(`<button class="notice notice-success is-dismissible col-md-12 mt-3">
                                 <p> Logo uploaded Done!</p> </button>`);
             });
             mediaUploader.open();

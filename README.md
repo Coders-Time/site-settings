@@ -1,12 +1,13 @@
 === Site-settings ===
-Contributors: Coderstime
+Contributors: coderstime,lincolndu
 Tags: site, settings, site-settings
 Requires at least: 4.9 or higher
 Tested up to: 5.6
 Requires PHP: 5.6
-Stable tag: trunk
 License: GPLv2 (or later)
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
+Stable tag: 1.0.0
+
 
 Site-settings is the ultimate plugin for making all the necessary changes in the custom fields of a website. 
 
@@ -44,5 +45,5 @@ When activated this plugin will allow the admin to make changes in the custom fi
 These settings can be changed at the Settings => Site-Settings.
 
 == Changelog ==
-0.1
+1.0.0
 Initial release.
