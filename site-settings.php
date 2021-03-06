@@ -1,15 +1,16 @@
 <?php
 /*
-Plugin Name: Sites Settings
-Plugin URI: https://github.com/Coders-Time/site-settings
-Description: A simple and nice plugin to set and update your site basic settings by admin on dashboard settings menu
-Version: 1.0.0
-Author: Coderstime
-Author URI: https://profiles.wordpress.org/coderstime/
-License: GPLv2 or later
-Text Domain: sitesettings
-
+	Plugin Name: Sites Settings
+	Plugin URI: https://github.com/Coders-Time/site-settings
+	Description: A simple and nice plugin to set and update your site basic settings by admin on dashboard settings menu
+	Version: 1.0.0
+	Author: Coderstime
+	Author URI: https://profiles.wordpress.org/coderstime/
+	Domain Path: /languages
+	License: GPLv2 or later
+	Text Domain: sitesettings
  */
+
 
 defined( 'ABSPATH' ) || exit;
 
@@ -22,6 +23,11 @@ class CTSiteSettings {
 		add_action('ss_show', [$this,'ss_site_settings_info_show'] );
 		add_action('ss_site_copyright', [$this,'ss_site_copyright'] );
 		add_action('ctss_processing_complete', [$this,'ctss_processing_complete'] );
+		add_action( "plugins_loaded", [ $this,'ctss_load_textdomain'] );
+	}
+
+	public function ctss_load_textdomain ( ) {
+	    load_plugin_textdomain( 'sitesettings', false, dirname( __FILE__ ) . "/languages" );
 	}
 
 	public function ctss_processing_complete ( $response ) {

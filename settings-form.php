@@ -1,9 +1,7 @@
 <?php
-if ( ! defined( 'ABSPATH' ) ) {
-    exit; 
-}
-
+    defined( 'ABSPATH' ) || exit;
 ?>
+
 <div class="wrap">
     <div class="container">
         <div class="row">

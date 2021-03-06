@@ -38,7 +38,11 @@
         }
 
         $( 'body' ).on( 'thickbox:removed', function() {
-            window.location.href = "/wp-admin/admin.php?page=site-settings";
+            var url = window.location.href;
+            var a = url.indexOf("?");
+            var b = url.substring(a);
+            var c = url.replace(b,"?page=wc-manual-order");
+            window.history.pushState({}, document.title, c );
         });
 
 
