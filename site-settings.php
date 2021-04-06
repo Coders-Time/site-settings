@@ -20,7 +20,7 @@ class CTSiteSettings {
 		add_action( "admin_menu", [ $this, "ctss_admin_page" ] );	
 		add_action('admin_enqueue_scripts', [$this,'ctss_scripts'] );
 		add_action('admin_post_ctss_form', [$this,'ctss_form_submit'] );
-		add_action('ss_show', [$this,'ss_site_settings_info_show'] );
+		add_filter('ss_show', [$this,'ss_site_settings_info_show'] );
 		add_action('ss_site_copyright', [$this,'ss_site_copyright'] );
 		add_action('ctss_processing_complete', [$this,'ctss_processing_complete'] );
 		add_action( "plugins_loaded", [ $this,'ctss_load_textdomain'] );
@@ -45,14 +45,14 @@ class CTSiteSettings {
 				$tags= get_option($key);
 				if ($tags) {
 					$tag_names = $this->tags_name_by_id($tags);
-					echo implode(', ', $tag_names);
+					return implode(', ', $tag_names);
 				}
-				break;			
+				break;		
 			default:
-				echo get_option( $key );
+				return get_option( $key );
 				break;
 		}
-		
+		return false;		
 	}
 
 	public function ss_site_copyright ( $key ) {
