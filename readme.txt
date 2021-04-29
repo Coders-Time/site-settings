@@ -111,11 +111,17 @@ to show Site Youtube link just use this shortcode
 When activated this plugin will allow the admin to make changes in the custom fields.
 These settings can be changed at the Settings => Site-Settings.
 
+== Screenshots ==
+1. Site Settings Panel
+2. Site Settings Menu
+
+
 == Changelog ==
 
-1.0.1
-Default Logo 
-Shortcode system upgrad
+= 1.0.1 =
+* Default Logo 
+* Shortcode system upgrad
+* select2 file location change
 
-1.0.0
-Initial release.
+= 1.0.0 =
+* Initial release.

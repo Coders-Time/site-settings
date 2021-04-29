@@ -8,8 +8,9 @@
         <div class="row">
             <div class="col-sm m-auto">
 
-                <div class="col-sm-12 my-5 text-center">
+                <div class="col-sm-12 col-md-8 m-auto my-5 text-center">
                     <h2 class="site_title"><?php _e('Site Settings Panel', 'ctss'); ?></h2>
+                    <hr>
                 </div>
 
                 <div class="row">

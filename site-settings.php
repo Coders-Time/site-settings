@@ -33,6 +33,8 @@ class CTSiteSettings {
 		add_action('ctss_processing_complete', [$this,'ctss_processing_complete'] );
 		
 		add_shortcode( 'ss_option', [$this,'sitesettings_show_func'] );
+		/*settings link on plugin section*/
+		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), [ $this, 'action_links' ] );
 
 
 	}
@@ -262,7 +264,7 @@ class CTSiteSettings {
         add_option('sitesettings_active', time());
 
         if ( null !== get_option('site_logo') ) {
-            $default_bg_img = WP_SS_ASSET_FILE . 'images/background-image.png';
+            $default_bg_img = WP_SS_ASSET_FILE . 'images/logo.png';
             $default_bg_img_id = $this->upload_image_file( $default_bg_img );
             update_option( 'site_logo', $default_bg_img_id); 
         } 
@@ -294,6 +296,21 @@ class CTSiteSettings {
     public function deactivate ( ) 
     {
         update_option('sitesettings_deactive', time());        
+    }
+
+    /**
+     * Show action links on the plugin screen
+     *
+     * @param mixed $links
+     * @return array
+     */
+    public function action_links( $links ) {
+        return array_merge(
+            [
+                '<a href="' . admin_url( 'options-general.php?page=site-settings' ) . '">' . __( 'Settings', 'sitesettings' ) . '</a>',
+                '<a href="' . esc_url( 'https://www.facebook.com/coderstime' ) . '">' . __( 'Support', 'sitesettings' ) . '</a>',
+                '<a href="' . esc_url( 'https://wordpress.org/support/plugin/site-settings/reviews/#new-post' ) . '">' . __( 'Review', 'sitesettings' ) . '</a>',
+            ], $links );
     }
 
 
