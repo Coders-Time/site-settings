@@ -6,7 +6,7 @@ Tested up to: 5.6
 Requires PHP: 5.6
 License: GPLv2 (or later)
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
-Stable tag: 1.0.0
+Stable tag: 1.0.1
 
 
 Site-settings is the ultimate plugin for making all the necessary changes in the custom fields of a website. 
@@ -30,13 +30,76 @@ For installation, it is quite easy. Anyone can install it from the the plugin re
 
 == Usage ==
 
-to show site Title just paste this code on your place
+to get site Logo url just use this shortcode
 
 `
-	do_action('ss_show','blogname');
+	[ss_option size="full"]site_logo[/ss_option]
 `
 
-And just replace do_action second parameter with 'site_logo' for Logo (image src),  'blogdescription' for Site Description, 'site_email' for Email, 'site_phone' for Phone number, 'site_address' for Address, 'site_copyright' for Copyright text, 'product_tags' for Tags, 'site_facebook' for Facebook link, 'site_twitter' for Twitter, 'site_instagram' for Instagram and 'site_youtube' for Youtube link. 
+to show site name just use this shortcode
+
+`
+	[ss_option]blogname[/ss_option]
+`
+
+to show site Description just use this shortcode
+
+`
+	[ss_option]blogdescription[/ss_option]
+`
+
+to show site Email just use this shortcode
+
+`
+	[ss_option]site_email[/ss_option]
+`
+
+to show site Phone just use this shortcode
+
+`
+	[ss_option]site_phone[/ss_option]
+`
+
+to show site Address just use this shortcode
+
+`
+	[ss_option]site_address[/ss_option]
+`
+
+to show Product Tags just use this shortcode
+
+`
+	[ss_option]product_tags[/ss_option]
+`
+
+to show Site Facebook link just use this shortcode
+
+`
+	[ss_option]site_facebook[/ss_option]
+`
+
+to show Site Twitter link just use this shortcode
+
+`
+	[ss_option]site_twitter[/ss_option]
+`
+
+to show Site Instagram link just use this shortcode
+
+`
+	[ss_option]site_instagram[/ss_option]
+`
+
+
+to show Site Youtube link just use this shortcode
+
+`
+	[ss_option]site_youtube[/ss_option]
+`
+
+
+== Don't Know Shortcode ? ==
+[go](https://developer.wordpress.org/reference/functions/do_shortcode/){:target="_blank" rel="noopener"}
 
 
 

@@ -3,7 +3,7 @@
 	Plugin Name: Sites Settings
 	Plugin URI: https://github.com/Coders-Time/site-settings
 	Description: A simple and nice plugin to set and update your site basic settings by admin on dashboard settings menu
-	Version: 1.0.0
+	Version: 1.0.1
 	Author: Coderstime
 	Author URI: https://profiles.wordpress.org/coderstime/
 	Domain Path: /languages
@@ -14,16 +14,27 @@
 
 defined( 'ABSPATH' ) || exit;
 
+define( 'WP_SS_ASSET_FILE', plugins_url( '/assets/', __FILE__ ) );
+
 class CTSiteSettings {
 
 	public function __construct ( ) {
+		/*Localize our plugin*/
+        add_action( "plugins_loaded", [ $this,'ctss_load_textdomain'] );
+
+        register_activation_hook( __FILE__, [ $this, 'activate' ] );
+        register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
+
 		add_action( "admin_menu", [ $this, "ctss_admin_page" ] );	
 		add_action('admin_enqueue_scripts', [$this,'ctss_scripts'] );
 		add_action('admin_post_ctss_form', [$this,'ctss_form_submit'] );
 		add_filter('ss_show', [$this,'ss_site_settings_info_show'] );
 		add_action('ss_site_copyright', [$this,'ss_site_copyright'] );
 		add_action('ctss_processing_complete', [$this,'ctss_processing_complete'] );
-		add_action( "plugins_loaded", [ $this,'ctss_load_textdomain'] );
+		
+		add_shortcode( 'ss_option', [$this,'sitesettings_show_func'] );
+
+
 	}
 
 	public function ctss_load_textdomain ( ) {
@@ -37,6 +48,38 @@ class CTSiteSettings {
         		printf('<p class="success_msg">Copy and paste this code in PHP block to show %1$s</p><pre><code>do_action("ss_show","%1$s");</code></pre>',$msg);
 			}
 		}        
+	}
+
+
+	public function sitesettings_show_func( $sizes, $key = "" ) {
+
+	    switch ( trim($key) ) {
+			case 'product_tags':
+				$tags= get_option($key);
+				if ($tags) {
+					$tag_names = $this->tags_name_by_id($tags);
+					return implode(', ', $tag_names);
+				}
+				break;
+			case 'site_logo': /*logo image key*/
+				$site_logo = get_option('site_logo'); /*get logo value from option table*/
+
+				$size = 'full';	/*logo default size*/		
+				if ( isset($sizes) && isset( $sizes['size']) ) {
+					$size = $sizes['size']; /*get user defined size*/
+				}
+
+				if ( $site_logo ) {
+					return wp_get_attachment_image_src( $site_logo, $size )[0];
+				} else {
+					return get_option('blogname');
+				}
+				break;		
+			default:
+				return get_option( $key );
+				break;
+		}
+		return false;	
 	}
 
 	public function ss_site_settings_info_show ( $key ) {
@@ -174,7 +217,75 @@ class CTSiteSettings {
 		return array_map(function($tag){global $taxonomy;return get_term( $tag, $taxonomy )->name;}, $tags);
 	}
 
+	/*Upload image file from local path*/
+
+    public function upload_image_file ( $image_url ) {
+
+        $upload_dir = wp_upload_dir();
+        $image_data = file_get_contents( $image_url );
+
+        $filename = basename( $image_url );
+
+        if ( wp_mkdir_p( $upload_dir['path'] ) ) {
+          $file = $upload_dir['path'] . '/' . $filename;
+        }
+        else {
+          $file = $upload_dir['basedir'] . '/' . $filename;
+        }
+
+        file_put_contents( $file, $image_data );
+
+        $wp_filetype = wp_check_filetype( $filename, null );
+
+        $attachment = array(
+          'post_mime_type' => $wp_filetype['type'],
+          'post_title' => sanitize_file_name( $filename ),
+          'post_content' => '',
+          'post_status' => 'inherit'
+        );
+
+        $attach_id = wp_insert_attachment( $attachment, $file );
+        require_once( ABSPATH . 'wp-admin/includes/image.php' );
+        $attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+        wp_update_attachment_metadata( $attach_id, $attach_data );
+        
+        return $attach_id;
+    }
+
+	/**
+     *
+     * run when plugin install
+     * install time store on option table
+     */
+    
+    public function activate ( ) 
+    {
+        add_option('sitesettings_active', time());
+
+        if ( null !== get_option('site_logo') ) {
+            $default_bg_img = WP_SS_ASSET_FILE . 'images/background-image.png';
+            $default_bg_img_id = $this->upload_image_file( $default_bg_img );
+            update_option( 'site_logo', $default_bg_img_id); 
+        }       
+
+    }
+
+    /**
+     *
+     * run when deactivate the plugin
+     * store deactivate time on database option table
+     */
+
+    public function deactivate ( ) 
+    {
+        update_option('sitesettings_deactive', time());        
+    }
+
 
 }
 
-new CTSiteSettings;
+
+
+add_action( 'plugins_loaded', function(){new CTSiteSettings;} );
+
+

@@ -1,5 +1,6 @@
 <?php
     defined( 'ABSPATH' ) || exit;
+
 ?>
 
 <div class="wrap">
@@ -16,7 +17,7 @@
                         <form action='<?php echo esc_url(admin_url('admin-post.php')); ?>' method='POST'>
                             <div class="row g-3 mb-3">
                                 <?php $label = __('Site logo', 'ctss'); ?>
-                                <label for='site_logo'><?php echo esc_html($label); ?></label>
+                                <label for='site_logo'><?php echo esc_html($label); ?> </label>
                                 <div class="col">
                                     <?php if ( $img_id= get_option('site_logo')) {
                                         $image_url = wp_get_attachment_image_src( $img_id, 'thumbnail');
@@ -26,7 +27,10 @@
                                 <div class="col">
                                 <button id="site_logo" type="button" class="btn btn-secondary btn-lg btn-block"> <?php echo get_option('site_logo') ? 'Change Image' : 'Select Image'; ?> </button>
                                     <input type="hidden" id="site_logo_val" name="site_logo">
-                                </div>                              
+                                </div>    
+                                <small>
+                                    Shortcode <code>[ss_option size="full"]site_logo[/ss_option]</code>
+                                </small>                          
                             </div>
 
                             <div class="row m-auto logo_file"></div>
@@ -37,6 +41,9 @@
                                 <label for="site_title" class="form-label"><?php echo esc_html($label); ?></label>
                                 <input type="text" name='blogname' class="form-control" id="site_title" aria-describedby="nameHelp" value='<?php echo esc_html(get_option('blogname')); ?>'>
                                 <div id="nameHelp" class="form-text"><?php echo esc_html(__('Your website title here', 'ctss')); ?></div>
+                                <small>
+                                    Shortcode <code>[ss_option]blogname[/ss_option]</code>
+                                </small> 
                             </div>
 
                             <div class="mb-3">
@@ -44,6 +51,9 @@
                                 <label for="site_tagline" class="form-label"><?php echo esc_html($label); ?></label>
                                 <input type="text" name='blogdescription' class="form-control" id="site_tagline" aria-describedby="descriptionHelp" value='<?php echo get_option('blogdescription'); ?>'>
                                 <div id="descriptionHelp" class="form-text"><?php echo esc_html(__('Your Site description here', 'ctss')); ?></div>
+                                <small>
+                                    Shortcode <code>[ss_option]blogdescription[/ss_option]</code>
+                                </small> 
                             </div>
 
                             <div class="mb-3">
@@ -51,6 +61,9 @@
                                 <label for="site_email" class="form-label"><?php echo esc_html($label); ?></label>
                                 <input type="email" name='site_email' class="form-control" id="site_email" aria-describedby="emailHelp" value='<?php echo get_option('site_email'); ?>'>
                                 <div id="emailHelp" class="form-text"><?php echo esc_html(__('Your Site Email here', 'ctss')); ?></div>
+                                <small>
+                                    Shortcode <code>[ss_option]site_email[/ss_option]</code>
+                                </small>
                             </div>
 
                             <div class="mb-3">
@@ -58,6 +71,9 @@
                                 <label for="site_phone" class="form-label"><?php echo esc_html($label); ?></label>
                                 <input type="tel" name='site_phone' class="form-control" id="site_phone" aria-describedby="phoneHelp" value='<?php echo esc_html(get_option('site_phone')); ?>'>
                                 <div id="phoneHelp" class="form-text"><?php echo esc_html(__('Your Site Phone number here', 'ctss')); ?></div>
+                                <small>
+                                    Shortcode <code>[ss_option]site_phone[/ss_option]</code>
+                                </small>
                             </div>
 
                             <div class="mb-3">
@@ -65,6 +81,9 @@
                                 <label for="site_address" class="form-label"><?php echo esc_html($label); ?></label>
                                 <input type="text" name='site_address' class="form-control" id="site_address" aria-describedby="addressHelp" value='<?php echo esc_html(get_option('site_address')); ?>'>
                                 <div id="addressHelp" class="form-text"><?php echo esc_html(__('Your Site Address here', 'ctss')); ?></div>
+                                <small>
+                                    Shortcode <code>[ss_option]site_address[/ss_option]</code>
+                                </small>
                             </div>
 
                             <div class="mb-3">
@@ -72,6 +91,9 @@
                                 <label for="site_copyright" class="form-label"><?php echo esc_html($label); ?></label>
                                 <input type="text" name='site_copyright' class="form-control" id="site_copyright" aria-describedby="copyrightHelp" value='<?php echo esc_html(get_option('site_copyright')); ?>'>
                                 <div id="copyrightHelp" class="form-text"><?php echo esc_html(__('Your Site copyright information here', 'ctss')); ?></div>
+                                <small>
+                                    Shortcode <code>[ss_option]site_copyright[/ss_option]</code>
+                                </small>
                             </div>
 
                             <div class="mb-1">
@@ -93,6 +115,11 @@
                                         } ?>
                                     </optgroup>                                    
                                 </select>
+
+                                <small>
+                                    Shortcode <code>[ss_option]product_tags[/ss_option]</code>
+                                </small>
+
                             </div>
 
                             <div class="mb-3">
@@ -100,6 +127,11 @@
                                 <label for="site_facebook" class="form-label"><?php echo esc_html($label); ?></label>
                                 <input type="url" name='site_facebook' class="form-control" id="site_facebook" aria-describedby="facebookHelp" value='<?php echo esc_url(get_option('site_facebook')); ?>'>
                                 <div id="facebookHelp" class="form-text"><?php echo esc_html(__('Your Site facebook page link here', 'ctss')); ?></div>
+
+                                <small>
+                                    Shortcode <code>[ss_option]site_facebook[/ss_option]</code>
+                                </small>
+
                             </div>
 
                             <div class="mb-3">
@@ -107,6 +139,9 @@
                                 <label for="site_twitter" class="form-label"><?php echo esc_html($label); ?></label>
                                 <input type="url" name='site_twitter' class="form-control" id="site_twitter" aria-describedby="twitterHelp" value='<?php echo esc_url(get_option('site_twitter')); ?>'>
                                 <div id="twitterHelp" class="form-text"><?php echo esc_html(__('Your Site twitter page link here', 'ctss')); ?></div>
+                                <small>
+                                    Shortcode <code>[ss_option]site_twitter[/ss_option]</code>
+                                </small>
                             </div>
 
                             <div class="mb-3">
@@ -114,6 +149,9 @@
                                 <label for="site_instagram" class="form-label"><?php echo esc_html($label); ?></label>
                                 <input type="url" name='site_instagram' class="form-control" id="site_instagram" aria-describedby="instagramHelp" value='<?php echo esc_url(get_option('site_instagram')); ?>'>
                                 <div id="instagramHelp" class="form-text"><?php echo esc_html(__('Your Site instagram page link here', 'ctss')); ?></div>
+                                <small>
+                                    Shortcode <code>[ss_option]site_instagram[/ss_option]</code>
+                                </small>
                             </div>
 
                             <div class="mb-3">
@@ -121,6 +159,9 @@
                                 <label for="site_youtube" class="form-label"><?php echo esc_html($label); ?></label>
                                 <input type="url" name='site_youtube' class="form-control" id="site_youtube" aria-describedby="youtubeHelp" value='<?php echo esc_url(get_option('site_youtube')); ?>'>
                                 <div id="youtubeHelp" class="form-text"><?php echo esc_html(__('Your Site youtube channel link here', 'ctss')); ?></div>
+                                <small>
+                                    Shortcode <code>[ss_option]site_youtube[/ss_option]</code>
+                                </small>
                             </div>
 
                                 <div class='pure-control-group' style='margin:20px auto;width: fit-content;'>
