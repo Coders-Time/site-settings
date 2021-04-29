@@ -1,12 +1,19 @@
 === Site-settings ===
 
 Contributors: coderstime,lincolndu
+
 Tags: site, settings, site-settings
+
 Requires at least: 4.9 or higher
+
 Tested up to: 5.6
+
 Requires PHP: 5.6
+
 License: GPLv2 (or later)
+
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
+
 Stable tag: 1.0.1
 
 
