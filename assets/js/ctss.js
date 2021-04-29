@@ -22,9 +22,10 @@
             });
             
             mediaUploader.on('select', function(){
-                attachment = mediaUploader.state().get('selection').first().toJSON().id;
+                attachment = mediaUploader.state().get('selection').first().toJSON();
                 console.log(attachment);
-                $('#site_logo_val').val(attachment);
+                $('#site_logo_val').val(attachment.id);
+                $('.site_logo_preview .preview').attr('src',attachment.url);
                 $("#site_logo").hide();
                 $('.logo_file').append(`<button class="notice notice-success is-dismissible col-md-12 mt-3">
                                 <p> Logo uploaded Done!</p> </button>`);
@@ -41,7 +42,7 @@
             var url = window.location.href;
             var a = url.indexOf("?");
             var b = url.substring(a);
-            var c = url.replace(b,"?page=wc-manual-order");
+            var c = url.replace(b,"?page=site-settings");
             window.history.pushState({}, document.title, c );
         });
 

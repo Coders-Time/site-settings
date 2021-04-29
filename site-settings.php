@@ -195,7 +195,7 @@ class CTSiteSettings {
             wp_enqueue_style('bootstrap', WP_SS_ASSET_FILE . 'css/bootstrap.min.css', [], '5.0.0');
             wp_enqueue_style('select2', WP_SS_ASSET_FILE . 'css/select2.css',[]);
             wp_enqueue_style('ctss', WP_SS_ASSET_FILE . 'css/style.css', array(), filemtime($folder_path.'/assets/css/style.css'));            
-            wp_enqueue_script('select2', WP_SS_ASSET_FILE . '/js/select2.js', array('jquery'));
+            wp_enqueue_script('select2', WP_SS_ASSET_FILE . 'js/select2.js', array('jquery'));
             wp_enqueue_media(); /*media upload*/
             wp_enqueue_script('ctss', WP_SS_ASSET_FILE . 'js/ctss.js', array('jquery', 'thickbox'), filemtime($folder_path.'/assets/js/ctss.js'), true);
             add_thickbox();
@@ -265,6 +265,22 @@ class CTSiteSettings {
             $default_bg_img = WP_SS_ASSET_FILE . 'images/background-image.png';
             $default_bg_img_id = $this->upload_image_file( $default_bg_img );
             update_option( 'site_logo', $default_bg_img_id); 
+        } 
+
+        if ( null !== get_option('site_facebook') ) {
+            update_option( 'site_facebook', 'https://facebook.com'); 
+        }
+
+        if ( null !== get_option('site_twitter') ) {
+            update_option( 'site_twitter', 'https://twitter.com'); 
+        }  
+
+        if ( null !== get_option('site_instagram') ) {
+            update_option( 'site_instagram', 'https://instagram.com'); 
+        }
+
+        if ( null !== get_option('site_youtube') ) {
+            update_option( 'site_youtube', 'https://youtube.com'); 
         }       
 
     }

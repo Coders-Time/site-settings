@@ -18,7 +18,7 @@
                             <div class="row g-3 mb-3">
                                 <?php $label = __('Site logo', 'ctss'); ?>
                                 <label for='site_logo'><?php echo esc_html($label); ?> </label>
-                                <div class="col">
+                                <div class="col site_logo_preview">
                                     <?php if ( $img_id= get_option('site_logo')) {
                                         $image_url = wp_get_attachment_image_src( $img_id, 'thumbnail');
                                         printf('<img class="preview" src=%s />',esc_url($image_url[0]));
