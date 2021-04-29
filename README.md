@@ -99,7 +99,7 @@ to show Site Youtube link just use this shortcode
 
 
 == Don't Know Shortcode ? ==
-[go](https://developer.wordpress.org/reference/functions/do_shortcode/){:target="_blank" rel="noopener"}
+[go](https://developer.wordpress.org/reference/functions/do_shortcode/)
 
 
 == Frequently Asked Questions ==
