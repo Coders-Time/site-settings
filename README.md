@@ -99,10 +99,12 @@ to show Site Youtube link just use this shortcode
 
 
 == Don't Know Shortcode ? ==
+
 [Wordpress Shortcode](https://developer.wordpress.org/reference/functions/do_shortcode/)
 
 
 == Frequently Asked Questions ==
+
 When activated this plugin will allow the admin to make changes in the custom fields.
 These settings can be changed at the Settings => Site-Settings.
 
