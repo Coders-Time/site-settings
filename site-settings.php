@@ -190,15 +190,14 @@ class CTSiteSettings {
 
         if ('settings_page_site-settings' == $hook) {
 
-            $asset_file_link = plugins_url( '', __FILE__ );
             $folder_path= __DIR__ ;
 
-            wp_enqueue_style('bootstrap', $asset_file_link. '/assets/css/bootstrap.min.css', [], '5.0.0');
-            wp_enqueue_style('select2', $asset_file_link . '/../woocommerce/assets/css/select2.css',[]);
-            wp_enqueue_style('ctss', $asset_file_link . '/assets/css/style.css', array(), filemtime($folder_path.'/assets/css/style.css'));            
-            wp_enqueue_script('select2', $asset_file_link . '/../woocommerce/assets/js/select2/select2.js', array('jquery'));
+            wp_enqueue_style('bootstrap', WP_SS_ASSET_FILE . 'css/bootstrap.min.css', [], '5.0.0');
+            wp_enqueue_style('select2', WP_SS_ASSET_FILE . 'css/select2.css',[]);
+            wp_enqueue_style('ctss', WP_SS_ASSET_FILE . 'css/style.css', array(), filemtime($folder_path.'/assets/css/style.css'));            
+            wp_enqueue_script('select2', WP_SS_ASSET_FILE . '/js/select2.js', array('jquery'));
             wp_enqueue_media(); /*media upload*/
-            wp_enqueue_script('ctss', $asset_file_link . '/assets/js/ctss.js', array('jquery', 'thickbox'), filemtime($folder_path.'/assets/js/ctss.js'), true);
+            wp_enqueue_script('ctss', WP_SS_ASSET_FILE . 'js/ctss.js', array('jquery', 'thickbox'), filemtime($folder_path.'/assets/js/ctss.js'), true);
             add_thickbox();
 
         }
