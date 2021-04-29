@@ -99,8 +99,7 @@ to show Site Youtube link just use this shortcode
 
 
 == Don't Know Shortcode ? ==
-[go](https://developer.wordpress.org/reference/functions/do_shortcode/){:target="_blank" rel="noopener"}
-
+[go](https://developer.wordpress.org/reference/functions/do_shortcode/)
 
 
 == Frequently Asked Questions ==
@@ -108,5 +107,9 @@ When activated this plugin will allow the admin to make changes in the custom fi
 These settings can be changed at the Settings => Site-Settings.
 
 == Changelog ==
+1.0.1
+Default Logo 
+Shortcode system upgrad
+
 1.0.0
 Initial release.
