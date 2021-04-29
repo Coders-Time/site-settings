@@ -1,4 +1,5 @@
 === Site-settings ===
+
 Contributors: coderstime,lincolndu
 Tags: site, settings, site-settings
 Requires at least: 4.9 or higher
@@ -12,6 +13,7 @@ Stable tag: 1.0.1
 Site-settings is the ultimate plugin for making all the necessary changes in the custom fields of a website. 
 
 == Description ==
+
 Site-settings is an official plugin maintained by the Coderstime team that adds an extra feature on the "Settings" option on the admin dashboard. It makes it possible to use plugins that extend that screen, add clean meta boxes.
 
 Site Settings is an official Coderstime plugin, and will be fully supported and maintained until at least 2022, or as long as is necessary.
@@ -25,6 +27,7 @@ Each post opens in the last editor used regardless of who edited it last. This i
 By default, this plugin hides all functionality available in the new block editor (“Gutenberg”).
 
 == Installation ==
+
 For installation, it is quite easy. Anyone can install it from the the plugin repository and afterwards can be found in the install new plugin section. Once installed, it will require activation from the admin. Later, the plugin form can be found in the settings option as Site-settings. just to to
 
 
@@ -109,6 +112,7 @@ When activated this plugin will allow the admin to make changes in the custom fi
 These settings can be changed at the Settings => Site-Settings.
 
 == Changelog ==
+
 1.0.1
 Default Logo 
 Shortcode system upgrad
