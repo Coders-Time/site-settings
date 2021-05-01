@@ -28,7 +28,7 @@ By default, this plugin hides all functionality available in the new block edito
 
 == Installation ==
 
-For installation, it is quite easy. Anyone can install it from the the plugin repository and afterwards can be found in the install new plugin section. Once installed, it will require activation from the admin. Later, the plugin form can be found in the settings option as Site-settings. just to to
+For installation, it is quite easy. Anyone can install it from the the plugin repository and afterwards can be found in the install new plugin section. Once installed, it will require activation from the admin. Later, the plugin form can be found in the settings option as Site settings.
 
 
 == Usage ==
@@ -125,9 +125,11 @@ These settings can be changed at the Settings => Site-Settings.
 == Changelog ==
 
 = 1.1.0 =
-* product_tag to site tags
-* add Post tag
+* product_tags change to site_tags
+* add Post tags with product tags
+* show tag list with tag link
 * fix bug
+* activate plugin with default data
 
 = 1.0.1 =
 * Default Logo 

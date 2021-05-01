@@ -267,8 +267,7 @@ class CTSiteSettings {
 
         if ( false === get_option('sitesettings_active') ) {
         	add_option('sitesettings_active', [time(),'1.1.0']);    
-        }
-        
+        }       
     }
 
     /**
@@ -367,7 +366,7 @@ class CTSiteSettings {
         return array_merge(
             [
                 '<a href="' . admin_url( 'options-general.php?page=site-settings' ) . '">' . __( 'Settings', 'sitesettings' ) . '</a>',
-                '<a href="' . esc_url( 'https://www.facebook.com/coderstime' ) . '">' . __( 'Support', 'sitesettings' ) . '</a>',
+                '<a href="' . esc_url( 'https://wordpress.org/plugins/sites-settings/#description' ) . '">' . __( 'Documentation', 'sitesettings' ) . '</a>',
                 '<a href="' . esc_url( 'https://wordpress.org/support/plugin/site-settings/reviews/#new-post' ) . '">' . __( 'Review', 'sitesettings' ) . '</a>',
             ], $links );
     }
