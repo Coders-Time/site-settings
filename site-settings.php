@@ -3,7 +3,7 @@
 	Plugin Name: Sites Settings
 	Plugin URI: https://github.com/Coders-Time/site-settings
 	Description: A simple and nice plugin to set and update your site basic settings by admin on dashboard settings menu
-	Version: 1.0.1
+	Version: 1.1.0
 	Author: Coderstime
 	Author URI: https://profiles.wordpress.org/coderstime/
 	Domain Path: /languages
@@ -20,7 +20,7 @@ class CTSiteSettings {
 
 	public function __construct ( ) {
 		/*Localize our plugin*/
-        add_action( "plugins_loaded", [ $this,'ctss_load_textdomain'] );
+        add_action( "init", [ $this,'ctss_load_textdomain'] );
 
         register_activation_hook( __FILE__, [ $this, 'activate' ] );
         register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
@@ -28,14 +28,11 @@ class CTSiteSettings {
 		add_action( "admin_menu", [ $this, "ctss_admin_page" ] );	
 		add_action('admin_enqueue_scripts', [$this,'ctss_scripts'] );
 		add_action('admin_post_ctss_form', [$this,'ctss_form_submit'] );
-		add_filter('ss_show', [$this,'ss_site_settings_info_show'] );
-		add_action('ss_site_copyright', [$this,'ss_site_copyright'] );
 		add_action('ctss_processing_complete', [$this,'ctss_processing_complete'] );
 		
 		add_shortcode( 'ss_option', [$this,'sitesettings_show_func'] );
 		/*settings link on plugin section*/
 		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), [ $this, 'action_links' ] );
-
 
 	}
 
@@ -47,7 +44,7 @@ class CTSiteSettings {
 		$msgs = explode('-',$response);
 		if ( count( $msgs )>0 ) {
 			foreach ( $msgs as $msg ) {
-        		printf('<p class="success_msg">Copy and paste this code in PHP block to show %1$s</p><pre><code>do_action("ss_show","%1$s");</code></pre>',$msg);
+        		printf('<p class="success_msg">Copy and paste this code in PHP block to show %1$s</p><pre><code>echo do_shortcode("[ss_option]%1$s[/ss_option]");</code></pre>',$msg);
 			}
 		}        
 	}
@@ -56,6 +53,13 @@ class CTSiteSettings {
 	public function sitesettings_show_func( $sizes, $key = "" ) {
 
 	    switch ( trim($key) ) {
+			case 'site_tags':
+				$tags= get_option($key);
+				if ($tags) {
+					$tag_names = $this->tags_name_by_id($tags);
+					return implode(', ', $tag_names);
+				}
+				break;
 			case 'product_tags':
 				$tags= get_option($key);
 				if ($tags) {
@@ -84,26 +88,6 @@ class CTSiteSettings {
 		return false;	
 	}
 
-	public function ss_site_settings_info_show ( $key ) {
-		switch ( $key ) {
-			case 'product_tags':
-				$tags= get_option($key);
-				if ($tags) {
-					$tag_names = $this->tags_name_by_id($tags);
-					return implode(', ', $tag_names);
-				}
-				break;		
-			default:
-				return get_option( $key );
-				break;
-		}
-		return false;		
-	}
-
-	public function ss_site_copyright ( $key ) {
-		echo get_option( $key );
-	}
-
 	public function ctss_form_submit ( ) {
 
 		if (isset($_POST['submit']) ) {
@@ -130,10 +114,10 @@ class CTSiteSettings {
 
 				$tags = array_map( 'esc_attr', isset( $_POST['tags'] ) ? (array) $_POST['tags'] : [] );
 
-				if ( array_diff($tags, get_option('product_tags')) ) {
-					update_option( 'product_tags', $tags );
+				if ( array_diff($tags, get_option('site_tags')) ) {
+					update_option( 'site_tags', $tags );
 					set_transient("ss_tag", 'Site tags updated', 500);
-					$this->response[] = 'product_tags';
+					$this->response[] = 'site_tags';
 				}
 
 				if ( strlen($site_logo) > 0 && get_option('site_logo') != $site_logo ) {
@@ -201,7 +185,6 @@ class CTSiteSettings {
             wp_enqueue_media(); /*media upload*/
             wp_enqueue_script('ctss', WP_SS_ASSET_FILE . 'js/ctss.js', array('jquery', 'thickbox'), filemtime($folder_path.'/assets/js/ctss.js'), true);
             add_thickbox();
-
         }
     }
 	
@@ -209,7 +192,7 @@ class CTSiteSettings {
 	public function ctss_display_settings_info ( ) {
 		$post_tags = get_tags(['hide_empty' => false]); 
 		$product_tags = get_terms( 'product_tag'); 
-		$tags= get_option('product_tags');
+		$tags= get_option('site_tags');
 		
 		include('settings-form.php');
 	}
@@ -318,6 +301,6 @@ class CTSiteSettings {
 
 
 
-add_action( 'plugins_loaded', function(){new CTSiteSettings;} );
+add_action( 'plugins_loaded', function(){ new CTSiteSettings;} );
 
 

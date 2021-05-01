@@ -1,13 +1,13 @@
 === Site-settings ===
 
 Contributors: coderstime,lincolndu
-Tags: site, settings, site-settings
+Tags: Theme Basic settings, site settings, Theme settings, Site Social links
 Requires at least: 4.9 or higher
-Tested up to: 5.6
+Tested up to: 5.7
 Requires PHP: 5.6
 License: GPLv2 (or later)
 License URI: https://www.gnu.org/licenses/gpl-3.0.en.html
-Stable tag: 1.0.1
+Stable tag: 1.1.0
 
 
 Site-settings is the ultimate plugin for making all the necessary changes in the custom fields of a website. 
@@ -69,10 +69,10 @@ to show site Address just use this shortcode
 	[ss_option]site_address[/ss_option]
 `
 
-to show Product Tags just use this shortcode
+to show Site Tags just use this shortcode
 
 `
-	[ss_option]product_tags[/ss_option]
+	[ss_option]site_tags[/ss_option]
 `
 
 to show Site Facebook link just use this shortcode

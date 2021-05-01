@@ -1,6 +1,5 @@
 <?php
     defined( 'ABSPATH' ) || exit;
-
 ?>
 
 <div class="wrap">
@@ -98,7 +97,7 @@
                             </div>
 
                             <div class="mb-1">
-                                <?php $label = __('Tag Name', 'ctss'); ?>
+                                <?php $label = __('Site Tag List', 'ctss'); ?>
                                 <label for='tag_name' class="form-label"><?php echo esc_html($label); ?></label>
                             </div>
 
@@ -114,11 +113,22 @@
                                                 }                                                
                                             }
                                         } ?>
+                                    </optgroup>  
+                                    <optgroup label="<?php echo get_post_type_object( 'post' )->labels->singular_name;?> tags">
+                                        <?php  if ( count($post_tags)>0 ) {
+                                            foreach ( $post_tags as $key => $tag ) {
+                                                if ( in_array($tag->term_id,$tags)) {
+                                                    printf('<option value="%d" selected>%s</option>',$tag->term_id,$tag->name);
+                                                } else {
+                                                    printf('<option value="%d">%s</option>',$tag->term_id,$tag->name);
+                                                }                                                
+                                            }
+                                        } ?>
                                     </optgroup>                                    
                                 </select>
 
                                 <small>
-                                    Shortcode <code>[ss_option]product_tags[/ss_option]</code>
+                                    Shortcode <code>[ss_option]site_tags[/ss_option]</code>
                                 </small>
 
                             </div>
