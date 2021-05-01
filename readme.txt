@@ -75,6 +75,12 @@ to show Site Tags just use this shortcode
 	[ss_option]site_tags[/ss_option]
 `
 
+to show Site Tags with tag link just use this shortcode
+
+`
+	[ss_option link="true"]site_tags[/ss_option]
+`
+
 to show Site Facebook link just use this shortcode
 
 `
@@ -117,6 +123,11 @@ These settings can be changed at the Settings => Site-Settings.
 
 
 == Changelog ==
+
+= 1.1.0 =
+* product_tag to site tags
+* add Post tag
+* fix bug
 
 = 1.0.1 =
 * Default Logo 

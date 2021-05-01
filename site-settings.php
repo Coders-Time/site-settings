@@ -14,16 +14,18 @@
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'WP_SS_ASSET_FILE', plugins_url( '/assets/', __FILE__ ) );
+define( 'WP_SS_FILE', __FILE__ );
+define( 'WP_SS_ASSET_FILE', plugins_url( '/assets/', WP_SS_FILE ) );
 
 class CTSiteSettings {
 
-	public function __construct ( ) {
-		/*Localize our plugin*/
-        add_action( "init", [ $this,'ctss_load_textdomain'] );
+	public function __construct ( ) 
+	{
+        register_activation_hook ( WP_SS_FILE, [ $this, 'activation'] );
+        register_deactivation_hook( WP_SS_FILE, [ $this, 'deactivate'] );
 
-        register_activation_hook( __FILE__, [ $this, 'activate' ] );
-        register_deactivation_hook( __FILE__, [ $this, 'deactivate' ] );
+        /*Localize our plugin*/
+        add_action( "plugins_loaded", [ $this,'ctss_load_textdomain'] );
 
 		add_action( "admin_menu", [ $this, "ctss_admin_page" ] );	
 		add_action('admin_enqueue_scripts', [$this,'ctss_scripts'] );
@@ -32,12 +34,12 @@ class CTSiteSettings {
 		
 		add_shortcode( 'ss_option', [$this,'sitesettings_show_func'] );
 		/*settings link on plugin section*/
-		add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), [ $this, 'action_links' ] );
+		add_filter( 'plugin_action_links_' . plugin_basename( WP_SS_FILE ), [ $this, 'action_links' ] );
 
 	}
 
 	public function ctss_load_textdomain ( ) {
-	    load_plugin_textdomain( 'sitesettings', false, dirname( __FILE__ ) . "/languages" );
+	    load_plugin_textdomain( 'sitesettings', false, dirname( WP_SS_FILE ) . "/languages" );
 	}
 
 	public function ctss_processing_complete ( $response ) {
@@ -50,14 +52,18 @@ class CTSiteSettings {
 	}
 
 
-	public function sitesettings_show_func( $sizes, $key = "" ) {
+	public function sitesettings_show_func( $atts, $key = "" ) {
 
 	    switch ( trim($key) ) {
 			case 'site_tags':
 				$tags= get_option($key);
-				if ($tags) {
+				if ($tags && (!isset($atts['link']) || $atts['link'] != 'true'  )  ) {
 					$tag_names = $this->tags_name_by_id($tags);
 					return implode(', ', $tag_names);
+				}
+				if ( isset($atts['link']) && $atts['link'] == 'true' && $tags ) {
+					$tag_names = $this->tags_name_link_by_id( $tags );
+					return implode(PHP_EOL, $tag_names);
 				}
 				break;
 			case 'product_tags':
@@ -71,8 +77,8 @@ class CTSiteSettings {
 				$site_logo = get_option('site_logo'); /*get logo value from option table*/
 
 				$size = 'full';	/*logo default size*/		
-				if ( isset($sizes) && isset( $sizes['size']) ) {
-					$size = $sizes['size']; /*get user defined size*/
+				if ( isset($atts) && isset( $atts['size']) ) {
+					$size = $atts['size']; /*get user defined size*/
 				}
 
 				if ( $site_logo ) {
@@ -114,10 +120,14 @@ class CTSiteSettings {
 
 				$tags = array_map( 'esc_attr', isset( $_POST['tags'] ) ? (array) $_POST['tags'] : [] );
 
-				if ( array_diff($tags, get_option('site_tags')) ) {
+				if ( null !== get_option('site_tags') && array_diff($tags, get_option('site_tags') ) ) {
 					update_option( 'site_tags', $tags );
 					set_transient("ss_tag", 'Site tags updated', 500);
 					$this->response[] = 'site_tags';
+				}
+
+				if ( false === get_option('site_tags') ) {
+					add_option( 'site_tags', $tags );
 				}
 
 				if ( strlen($site_logo) > 0 && get_option('site_logo') != $site_logo ) {
@@ -201,40 +211,12 @@ class CTSiteSettings {
 		return array_map(function($tag){global $taxonomy;return get_term( $tag, $taxonomy )->name;}, $tags);
 	}
 
-	/*Upload image file from local path*/
-
-    public function upload_image_file ( $image_url ) {
-
-        $upload_dir = wp_upload_dir();
-        $image_data = file_get_contents( $image_url );
-
-        $filename = basename( $image_url );
-
-        if ( wp_mkdir_p( $upload_dir['path'] ) ) {
-          $file = $upload_dir['path'] . '/' . $filename;
-        }
-        else {
-          $file = $upload_dir['basedir'] . '/' . $filename;
-        }
-
-        file_put_contents( $file, $image_data );
-
-        $wp_filetype = wp_check_filetype( $filename, null );
-
-        $attachment = array(
-          'post_mime_type' => $wp_filetype['type'],
-          'post_title' => sanitize_file_name( $filename ),
-          'post_content' => '',
-          'post_status' => 'inherit'
-        );
-
-        $attach_id = wp_insert_attachment( $attachment, $file );
-        require_once( ABSPATH . 'wp-admin/includes/image.php' );
-        $attach_data = wp_generate_attachment_metadata( $attach_id, $file );
-        wp_update_attachment_metadata( $attach_id, $attach_data );
-        
-        return $attach_id;
-    }
+	public function tags_name_link_by_id ( $tags, $taxonomy='product_tag' ) {
+		return array_map(function( $tag ){
+			global $taxonomy;
+			return '<li><a href="' . get_tag_link( $tag ) . '">' . get_term( $tag, $taxonomy )->name . '</a></li>';
+		}, $tags);
+	}
 
 	/**
      *
@@ -242,32 +224,51 @@ class CTSiteSettings {
      * install time store on option table
      */
     
-    public function activate ( ) 
+    public function activation ( ) 
     {
-        add_option('sitesettings_active', time());
+    	if ( version_compare( get_bloginfo( 'version' ), '4.9', ' < ' ) ) {
+            deactivate_plugins( basename( __FILE__ ) );
+        }
 
-        if ( null !== get_option('site_logo') ) {
+        if ( false === get_option('site_logo') ) {
             $default_bg_img = WP_SS_ASSET_FILE . 'images/logo.png';
             $default_bg_img_id = $this->upload_image_file( $default_bg_img );
-            update_option( 'site_logo', $default_bg_img_id); 
-        } 
-
-        if ( null !== get_option('site_facebook') ) {
-            update_option( 'site_facebook', 'https://facebook.com'); 
+            add_option( 'site_logo', $default_bg_img_id); 
         }
 
-        if ( null !== get_option('site_twitter') ) {
-            update_option( 'site_twitter', 'https://twitter.com'); 
+        if ( false === get_option('site_email') ) {
+            add_option( 'site_email', 'contact@' . $_SERVER['SERVER_NAME'] ); 
+        }
+
+        if ( false === get_option('site_phone') ) {
+        	$default_phone = get_user_meta( get_current_user_id(), 'billing_phone', true);
+            add_option( 'site_phone', $default_phone ); 
+        }
+
+        if ( false === get_option('site_facebook') ) {
+            add_option( 'site_facebook', 'https://facebook.com'); 
+        }
+
+        if ( false === get_option('site_twitter') ) {
+            add_option( 'site_twitter', 'https://twitter.com'); 
         }  
 
-        if ( null !== get_option('site_instagram') ) {
-            update_option( 'site_instagram', 'https://instagram.com'); 
+        if ( false === get_option('site_instagram') ) {
+            add_option( 'site_instagram', 'https://instagram.com'); 
         }
 
-        if ( null !== get_option('site_youtube') ) {
-            update_option( 'site_youtube', 'https://youtube.com'); 
-        }       
+        if ( false === get_option('site_youtube') ) {
+            add_option( 'site_youtube', 'https://youtube.com'); 
+        }
 
+        if ( false === get_option('site_tags') ) {
+            add_option( 'site_tags', []); 
+        }
+
+        if ( false === get_option('sitesettings_active') ) {
+        	add_option('sitesettings_active', [time(),'1.1.0']);    
+        }
+        
     }
 
     /**
@@ -278,7 +279,82 @@ class CTSiteSettings {
 
     public function deactivate ( ) 
     {
-        update_option('sitesettings_deactive', time());        
+        update_option('sitesettings_deactive', time());
+
+        // if ( get_option('site_logo') ) {
+        //     delete_option( 'site_logo' ); 
+        // }
+
+        // if ( get_option('site_tags') ) {
+        //     delete_option( 'site_tags' ); 
+        // }
+
+        // if ( get_option('site_email') ) {
+        //     delete_option( 'site_email' ); 
+        // }
+
+        // if ( get_option('site_phone') ) {
+        //     delete_option( 'site_phone' ); 
+        // }
+
+        // if ( get_option('site_address') ) {
+        //     delete_option( 'site_address' ); 
+        // }
+
+        // if ( get_option('site_copyright') ) {
+        //     delete_option( 'site_copyright' ); 
+        // }
+
+        // if ( get_option('site_facebook') ) {
+        //     delete_option( 'site_facebook' ); 
+        // }
+
+        // if ( get_option('site_twitter') ) {
+        //     delete_option( 'site_twitter' ); 
+        // }
+
+        // if ( get_option('site_instagram') ) {
+        //     delete_option( 'site_instagram' ); 
+        // }
+
+        // if ( get_option('site_youtube') ) {
+        //     delete_option( 'site_youtube' ); 
+        // }
+
+    }
+
+    /*Upload image file from local path*/
+
+    public function upload_image_file ( $image_url ) {
+
+        $upload_dir = wp_upload_dir();
+        $image_data = file_get_contents( $image_url );
+
+        $filename = basename( $image_url );
+
+        if ( wp_mkdir_p( $upload_dir['path'] ) ) {
+          $file = $upload_dir['path'] . '/' . $filename;
+        } else {
+          $file = $upload_dir['basedir'] . '/' . $filename;
+        }
+
+        file_put_contents( $file, $image_data );
+
+        $wp_filetype = wp_check_filetype( $filename, null );
+
+        $attachment = array(
+          'post_mime_type' => $wp_filetype['type'],
+          'post_title' => sanitize_file_name( $filename ),
+          'post_content' => 'Site Logo',
+          'post_status' => 'inherit'
+        );
+
+        $attach_id = wp_insert_attachment( $attachment, $file );
+        require_once( ABSPATH . 'wp-admin/includes/image.php' );
+        $attach_data = wp_generate_attachment_metadata( $attach_id, $file );
+        wp_update_attachment_metadata( $attach_id, $attach_data );
+        
+        return $attach_id;
     }
 
     /**
@@ -299,8 +375,8 @@ class CTSiteSettings {
 
 }
 
+new CTSiteSettings;
 
-
-add_action( 'plugins_loaded', function(){ new CTSiteSettings;} );
+// add_action( 'plugins_loaded', function(){ } );
 
 

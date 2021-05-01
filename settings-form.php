@@ -1,5 +1,7 @@
 <?php
     defined( 'ABSPATH' ) || exit;
+    $test_tags = get_tags(['hide_empty' => false,'term_id']);
+
 ?>
 
 <div class="wrap">
@@ -128,7 +130,7 @@
                                 </select>
 
                                 <small>
-                                    Shortcode <code>[ss_option]site_tags[/ss_option]</code>
+                                    Shortcode <code>[ss_option link='true']site_tags[/ss_option]</code>
                                 </small>
 
                             </div>
@@ -208,7 +210,3 @@
         ?>
     </div>
 </div>
-
-
-
-
