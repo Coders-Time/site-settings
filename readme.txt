@@ -130,6 +130,7 @@ These settings can be changed at the Settings => Site-Settings.
 * show tag list with tag link
 * fix bug
 * activate plugin with default data
+* Documentation and community support tab
 
 = 1.0.1 =
 * Default Logo 

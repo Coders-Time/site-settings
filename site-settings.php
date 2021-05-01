@@ -5,7 +5,7 @@
 	Description: A simple and nice plugin to set and update your site basic settings by admin on dashboard settings menu
 	Version: 1.1.0
 	Author: Coderstime
-	Author URI: https://profiles.wordpress.org/coderstime/
+	Author URI: https://www.facebook.com/coderstime/
 	Domain Path: /languages
 	License: GPLv2 or later
 	Text Domain: sitesettings
@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || exit;
 
 define( 'WP_SS_FILE', __FILE__ );
 define( 'WP_SS_ASSET_FILE', plugins_url( '/assets/', WP_SS_FILE ) );
+define( 'WP_SS_BASENAME', plugin_basename( WP_SS_FILE ) );
 
 class CTSiteSettings {
 
@@ -35,7 +36,21 @@ class CTSiteSettings {
 		add_shortcode( 'ss_option', [$this,'sitesettings_show_func'] );
 		/*settings link on plugin section*/
 		add_filter( 'plugin_action_links_' . plugin_basename( WP_SS_FILE ), [ $this, 'action_links' ] );
+		add_filter( 'plugin_row_meta', array( $this, 'plugin_row_meta' ), 10, 2 );
 
+	}
+
+	public function plugin_row_meta ( $links, $file ) {
+		
+		if ( WP_SS_BASENAME !== $file ) {
+			return $links;
+		}
+
+		$row_meta = array(
+			'docs'    => '<a href="' . esc_url( 'https://wordpress.org/plugins/sites-settings/#description' ). '">' . esc_html__( 'Documentation', 'sitesettings' ) . '</a>',
+			'support' => '<a href="' . esc_url( 'https://wordpress.org/support/plugin/sites-settings/' ) . '">' . esc_html__( 'Community support', 'sitesettings' ) . '</a>',
+		);
+		return array_merge( $links, $row_meta );
 	}
 
 	public function ctss_load_textdomain ( ) {
@@ -366,7 +381,7 @@ class CTSiteSettings {
         return array_merge(
             [
                 '<a href="' . admin_url( 'options-general.php?page=site-settings' ) . '">' . __( 'Settings', 'sitesettings' ) . '</a>',
-                '<a href="' . esc_url( 'https://wordpress.org/plugins/sites-settings/#description' ) . '">' . __( 'Documentation', 'sitesettings' ) . '</a>',
+                '<a href="' . esc_url( 'https://www.facebook.com/coderstime' ) . '">' . __( 'Support', 'mofw' ) . '</a>',
                 '<a href="' . esc_url( 'https://wordpress.org/support/plugin/site-settings/reviews/#new-post' ) . '">' . __( 'Review', 'sitesettings' ) . '</a>',
             ], $links );
     }
